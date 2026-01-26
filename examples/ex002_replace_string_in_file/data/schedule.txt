@@ -1,0 +1,4 @@
+Schedule:
+- On Monday mornings, the team meets for coffee.
+- Packages are always delivered on Mondays.
+- In this sentence, the word monday is all lowercase.
