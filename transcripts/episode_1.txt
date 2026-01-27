@@ -1,0 +1,41 @@
+Podcast: Learning Rust For Busy People
+Episode 1: Introduction
+Date: Monday, January 26, 2026
+
+Hello everyone! Welcome to the "Learning Rust For Busy People" podcast! This podcast is for busy people who want to learn and quickly be productive with the Rust programming language.
+
+My name is Josh and I’ve been writing code for a long time, mostly in Python. I recently decided to begin learning Rust and I quickly realized how steep the learning curve is, especially for someone like me who doesn’t have a lot of experience writing low-level code.
+
+In this podcast I’ll be sharing learnings, questions, and tips as I journey from having zero Rust knowledge to being productive with Rust. My goal is to help you take consistent, small steps to learn Rust during the limited time you have in your schedule.
+
+I’ll be creating podcast episodes in an audio-only format so that you can listen to them while doing chores, while commuting, or during any other time when you’re trying to squeeze some learning into your busy day. Personally, I love learning through audio podcasts because it gives me a break from the computer screen (which is a welcome change after I’ve worked in front of a computer all day) and because I don’t have much free time for dedicated learning in between family responsibilities and household chores.
+
+I realize that learning to write low-level code with a programming language like Rust requires more than just listening to an audio podcast. You need to write code yourself. However, I believe there’s a lot to be gained by listening to descriptions of concepts, challenges, and tips that relate to practical code examples since these can help fill in knowledge gaps when you actually do have time to experiment with Rust.
+
+The inspiration for the topics I cover will stem from practical code examples that I create on GitHub to help me understand how to use Rust. I’m deliberately focusing on practical examples that I can begin using in day-to-day work. Like many of you I’m sure, the sooner I see tangible results from the effort I invest in learning Rust, the more motivated I’ll be to continue learning. Over time, I see these practical code examples as building blocks that will enable me, and you, to use Rust to accomplish more complex tasks.
+
+During the podcast episodes, I’ll talk about what I learned while creating specific code examples, challenges I encountered, questions I had, and any tricks I discovered along the way. My hope is that this information will be helpful and relevant for folks like me who are starting their Rust journey with a strong foundation of knowledge based on a high-level language like Python.
+
+If you have time to review and test out the code examples, that’s great. If you only have time for the podcast episodes, that’s great too. At the end of the day, I’m hoping we can all learn Rust through lots of small steps in the right direction during our busy days.
+
+So that’s an overview about the format of this podcast. What about my motivation and inspiration for starting this podcast? Here’s a quick history.
+
+I’ve used Python for a long time, primarily for data analytics, AI & machine learning, and software engineering in the healthcare domain. I love Python’s simplicity – it’s readable, there are tons of packages in the ecosystem, and I can get things done quickly. So why change?
+
+Well, in recent years I’ve focused more and more on software engineering best practices. Compared to my earlier days with Python, I now spend a significant amount of time thinking about topics like code refactoring, code maintainability, testing, and CI/CD pipelines.
+
+This raised new ideas and questions in my mind. Is Python always the right tool for the job? What could I gain by learning and using a different language? What language should I learn?
+
+Like many avid Python users, I don’t have a formal degree in Computer Science; I built up my programming skills by learning on the job with projects. A key question for me is – which language is worth my time investment for learning, and how quickly can I be productive with it?
+
+Recently, I’ve been hearing more and more about the Rust programming language and how this is having a positive impact on the Python ecosystem through tools and libraries that are written in Rust, like "ruff", "uv", and "Polars". After reading a bit about Rust, I immediately felt a strong attraction towards the control and reliability it offers, and I realized that learning this could help me take my software engineering skills to the next level.
+
+I purchased and started reading "The Rust Programming Language, Second Edition" by Steve Klabnik and Carol Nichols. This book is also freely available online. The more I read, the more it reinforced my decision to begin learning Rust. However, Rust is hard. It’s a different beast than Python and I quickly realized I need to be patient. It’s going to take some time before I can really be productive to the same extent as with Python.
+
+I was inspired to start this podcast after hearing three specific comments in the "Holiday Episode" from December 25th, 2025 for the "Rust in Production" podcast. First, there is a need for more learning resources for beginner, intermediate, and advanced users of Rust. Second, there’s value in meeting people where they’re coming from. And third, it can be difficult to find time to learn Rust.
+
+I anticipate there are many people like me who have a strong foundation in a high-level programming language like Python, who don’t have much experience writing low-level code, and who have very busy schedules. If that’s you, my goal is to meet you where you’re coming from and to help you take small steps in the right direction to learn Rust. I hope you find this podcast helpful in your journey.
+
+You can find more details about the podcast on the website provided in the show notes.
+
+Thanks for listening and stay tuned for the release of future episodes!
