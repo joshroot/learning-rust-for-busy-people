@@ -1,5 +1,5 @@
 Podcast: Learning Rust For Busy People
-Episode 1: Introduction
+Episode: #1 – Introduction
 Date: Monday, January 26, 2026
 
 Hello everyone! Welcome to the "Learning Rust For Busy People" podcast! This podcast is for busy people who want to learn and quickly be productive with the Rust programming language.

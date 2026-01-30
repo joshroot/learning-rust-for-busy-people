@@ -1,0 +1,55 @@
+Podcast: Learning Rust For Busy People
+Episode: #2 – Installing Rust and using Cargo to manage a project
+Date: Thursday January 29, 2026
+
+Hello everyone! Welcome to the "Learning Rust For Busy People" podcast! This podcast is for busy people who want to learn and quickly be productive with the Rust programming language.
+
+My name is Josh and today I’ll be providing a high-level overview about installing Rust and using Cargo to manage a project. This will help lay the groundwork before we dive into practical code examples in future episodes. I’ll also talk about some differences and similarities in how projects are set up and managed in Rust versus in Python. You can find a comprehensive description of the process for installing Rust and using Cargo in the "Rust Programming Language Book", which I’ll refer to simply as "the book".
+
+Before digging in to technical details, this is a good point for me to mention the RustRover IDE. RustRover is an integrated development environment for Rust that’s developed by the team at JetBrains. It’s free for non-commercial use, which includes activities like content creation, hobby development & learning, and open-source project development. I’m a huge fan of the RustRover IDE – this is an incredibly useful tool for me as I learn and use Rust. If you’ve used the PyCharm IDE from JetBrains for your Python development work, you’ll find that RustRover provides a very similar experience. You can find a link to the RustRover website in the notes for this episode.
+
+Ok, let’s jump in to the topic of installing Rust. For Linux and macOS, we run a "curl" command to install a tool called "rustup" that installs Rust on our machine. The full "curl" command is listed in the first chapter of the book. I’m using macOS, so this is the step that I followed. If you’re using Windows, you can find installation instructions on a webpage that’s listed in the first chapter of the book, so I’ll refer you to that resource. After we’ve installed Rust, we run the command "rustup update" to update to the newest stable version of Rust.
+
+Now that Rust is installed and updated on our machine, we’ll create a project. To do that, we use "Cargo", which is a multi-purpose tool used for tasks like creating a new project, compiling our code, running the executable that’s built, and managing dependencies. The book indicates that Cargo is used by the majority of Rust users. Based on that, it sounds to me like the Rust ecosystem is mostly aligned around a single tool for creating and managing Rust projects.
+
+I want to reiterate that point. There is a single tool that is used to create and manage Rust projects, and it’s called "Cargo". This is awesome. Coming from a Python background, I’ve spent tons of time installing Python and configuring projects on various machines. I bet many of you can relate to this experience. It’s safe to say that there are multiple ways to set up and use Python on a given machine. For example, we can download installation files directly from the Python website or we can use a tool like Anaconda or Miniconda. We can use tools like "pip", "conda", "poetry", and "uv" to install and manage packages, and sometimes a Python project relies on a combination of these tools. Some of these tools will lock dependency package versions and others won’t.
+
+In general, there’s not a single, standardized process that everyone uses for setting up Python projects, and this is evident in the amount of variation across Python codebases. This can be a good thing because it gives more freedom to developers to choose how they set things up. However, it also means that there’s a greater burden on Python developers to be familiar with multiple different approaches for installing Python and managing dependency packages for a project.
+
+Needless to say, I am thrilled to know that with Rust there is only one tool to learn for this, and that’s Cargo. I suspect that having one primary tool for managing projects also means that there’s more standardization across Rust codebases. If that’s the case, then getting up to speed on a new Rust codebase will be a whole lot easier. This is definitely a question I’ll keep in mind as I explore more and more Rust codebases over time.
+
+So how do we use Cargo to create a Rust project? First, we open a command-line shell and run the command "cargo new", followed by the name of the project. For example, if we want to name our project "sandbox", we run "cargo new sandbox". After doing so, we see a message that says "Creating binary (application) `sandbox` package". This creates a "sandbox" directory in our working directory. There are two items in the "sandbox" directory. The first is a "src" subdirectory, spelled "s-r-c", and the second is a "Cargo.toml" file.
+
+The "src" directory contains a single file with Rust code, called "main.rs". When we open "main.rs", we see a single function, called "main", with a single statement in the function body that prints "Hello, world!". With even this small amount of Rust code, we can already identify four notable characteristics of Rust. First, in Rust, the keyword used to declare a function is "fn". Second, function bodies must be wrapped in curly brackets. Third, Rust has a feature called "macros", which are different than regular functions. And fourth, individual statements end with a semicolon.
+
+I’ll briefly talk about the concept of macros. In the "main" function, the statement that prints "Hello, world!" involves calling the "println" macro. This statement begins with "println", followed by an exclamation point, followed by a set of parentheses that contain the string, "Hello, world!" in double quotes, followed by a trailing semicolon. The key point to remember here is that if you see code that looks like a function call, but there’s an exclamation point in between the name and the parentheses, this means that a macro is being called, not a function.
+
+Now let’s open the "Cargo.toml" file. This file contains two different sections which are "package" and "dependencies". The section names are contained within square brackets. The "package" section contains three sets of key/value pairs. The keys are name, version, and edition. The values (which are all strings in double quotes) are separated from the associated keys by an equals sign.
+
+Interestingly, there are some similarities between creating a Rust project with Cargo and creating a Python project with "uv".
+
+For Python, when we run the "uv init" command in an empty directory to create a new project, this creates a "main.py" file and a "pyproject.toml" file. The "main.py" file contains a simple "main" function that prints a hello message. The "pyproject.toml" file has a single "project" section that contains key-value pairs with keys such as name, version, description, and dependencies. The values are separated from their associated keys by an equals sign, and they are typically strings in double quotes. One exception is the value for dependencies, which is a list.
+
+We end up with a similar result when creating a Rust project with Cargo and when creating a Python project with "uv". We’ll have a "main" file (such as "main.rs" or "main.py") that contains a simple function called "main", and we’ll have a TOML configuration file (such as "Cargo.toml" or "pyproject.toml") that contains project metadata and dependency details.
+
+This is good news if you’re coming from a Python background and you already use the "uv" tool since you’ll already know what to expect when creating a new project with Cargo.
+
+There’s a critical concept that I want to pause and discuss, and that’s the entry point for a program written in Rust versus in Python.
+
+The first chapter of the book explains that in a Rust program, the starting point in the code is the "main" function. I don’t currently know what kinds of restrictions and caveats exist around this, but I’m willing to guess that the "main" function must always reside in the "main.rs" file. This is another open question I’ll keep in mind.
+
+In Python, as many of you know, there’s not a single, universal entry point into the code. A given Python project may have a single entry point, but this varies from project to project. I’m curious if Rust can accommodate different approaches I’ve used in setting up Python projects. For example, if I have multiple standalone Python modules in a Python project and each module needs to be run separately for different purpose, how can I do this in Rust if the "main" function is the single entry point?
+
+Let’s jump back to the Rust project we created. We now have some simple Rust code and we want to execute it. To do so, we need to compile the code and then run the executable that is built. This two-step process is different than in Python because in Python we don’t need to compile the code.
+
+In our command-line shell, we’ll change into the "sandbox" project directory that we just created. We do that by running "cd sandbox". Now, we run a single command that will perform two tasks – compiling the code and running the executable that was built. This command is "cargo run".
+
+When we run the command "cargo run", we see a multi-line message that includes the words "Compiling", "Finished", and "Running", and we see "Hello, world!" printed in the command-line shell, as expected. We also see the path to the executable file that was built, which resides within a subdirectory of a newly-created "target" directory that sits adjacent to the "src" directory.
+
+In addition, we see that a "Cargo.lock" file was created, and this sits adjacent to the "Cargo.toml" file. The "Cargo.lock" file contains information about specific versions of dependency packages for the project. Similar to lock files in the Python ecosystem, such as the "uv.lock" file that’s created when using the "uv" tool, the "Cargo.lock" file does not need to be managed manually.
+
+And with that, we’ve finished a high-level overview of installing Rust and using the Cargo tool to manage a project. In future episodes, I’ll talk about additional capabilities of Cargo as we continue on our journey.
+
+I hope this was helpful. You can find more details about the podcast on the website provided in the episode notes.
+
+Thanks for listening and stay tuned for the release of the next episode in which we’ll dive into our first practical code example.
