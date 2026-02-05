@@ -1,0 +1,89 @@
+Podcast: Learning Rust For Busy People
+Episode: #3 – Extracting text from a Markdown file, part 1
+Date: Wednesday February 4, 2026
+
+Hello everyone! Welcome to the "Learning Rust For Busy People" podcast! This podcast is for busy people who want to learn and quickly be productive with the Rust programming language.
+
+My name is Josh and today I’ll be diving in to our first practical code example with Rust. The topic is – extracting text from a Markdown file. I consider this to be part of a broader category of use cases, which is processing text files.
+
+You may be wondering why I chose to begin with this particular topic. For me, processing text files was one of my first use cases when I began programming with Python. I think this is a common use case for programming in general and also a good starting point for jumping into some basic concepts with Rust. Extracting text from a Markdown file seemed like a simple example to start with.
+
+Just to clarify, when I say "processing text files", I’m broadly referring to any files that consist of human-readable text, not just files with a ".txt" extension. This includes things like Markdown files, CSV files, files with source code, and so on.
+
+Processing a text file involves tasks like opening the file, reading its contents, manipulating the text in some way (such as extracting specific information), and then doing something with the result – such as printing information to standard output. The example code that I talk through today will cover all of these concepts in Rust and will also offer a first glimpse into how we use functionality from the Rust standard library.
+
+Before diving in to the code, I want to give a quick summary of how I plan to organize the practical code examples for various topics that we discuss. For a given topic, such as "extracting text from a Markdown file", I’m planning to have several versions of code examples on GitHub. Each version will be a standalone Rust project that I create with Cargo – this way each code example is entirely self-contained. For a given topic, version 1 of the code example will be a bare minimum working version. Subsequent versions will be more robust and will include new Rust features and functionality.
+
+Today, I’ll focus on version 1 of the code example for the topic of "extracting text from a Markdown file". I created this project with the command "cargo new" and then the project name. This is a command we discussed in the previous episode.
+
+The primary file of interest today is "main.rs", which contains all of the Rust code. In this file, there is a single function, called "main", that has five separate statements in the function body. I’ll talk through what’s happening at a high level first, and then I’ll go into more technical depth.
+
+Ok, so high level, in the "main" function, we define a hard-coded file path to an example Markdown file, we read the contents of the Markdown file into a string, we get the first line of the contents (which is the line that contains the title in the Markdown file), we extract the raw title text from the first line of text (by removing Markdown-related characters), and then we print the raw title text to standard output. This code does the bare minimum for us – it allows us to extract some text (specifically, the title text) from a Markdown file.
+
+Now, let’s go through the code in more detail. To read the contents of a file into a string, we need to bring a module from the standard library into scope so that we have access to filesystem manipulation operations. Specifically, we need to bring the "fs" module into scope. We do this via a statement that reads "use std::fs;". This reminds me a little bit of an "import" statement at the top of a Python module. The notation "std::fs" means that we’re referring to the standard library, and then to the module "fs" in the standard library. We’ll come back to the "fs" module shortly.
+
+Next, we have our "main" function, which takes no parameters (as evidenced by a set of empty parentheses after the word "main"). Inside the curly brackets for the function body, we have five statements, each of which is indented with four SPACE characters and has a trailing semicolon.
+
+The first statement reads "let file_path =", followed by a string in double quotes with the path to an example Markdown file. The Markdown file is included in the GitHub repo, so this will be available if you try running the code. The "let" keyword is used to create a new variable and bind a value to it. The string in double quotes (which is our file path) is more precisely referred to as a "string literal". In Rust, the value of a string literal is hardcoded into the program. If you’re using the RustRover IDE, you’ll see that the variable "file_path" is annotated with the type "&str". Technically, the name of this type is "string slice". We’ll hear this come up again later on.
+
+You may be asking, what’s the difference between a "string literal" and a "string"? Well, in Rust, there is an important distinction between a "string literal" and a "String" (with a capital "S") – these are two different types. One notable difference is that a "string literal" is immutable, so it cannot be changed. A string literal is useful for storing a value that is constant. If we want to manipulate text, we can instead use a "String" (with a capital "S").
+
+In the example code we talk through today, we’ll encounter different kinds of string types and we’ll begin understanding how these are used differently. From this point forward, when I say the word "String" by itself, I’ll be referring to the type "String" (with a capital "S").
+
+Ok, moving on. The second statement reads "let contents =", followed by "fs", which is immediately followed by two colons and then the function name "read_to_string" (which is all lowercase and has underscores between the words). The "read_to_string" function takes "file_path" as its argument. On the next line, indented by an additional four SPACE characters, we see ".expect" followed by parentheses that contain the string literal "Could not read the file", and finally our trailing semicolon. This is a single statement that spans two lines. If you’re using the RustRover IDE, you’ll see that the variable "contents" is annotated with the type "String" (with a capital "S").
+
+There’s a lot going on here so let’s work through piece by piece. We’ll start with what’s on the right side of the equals sign. "fs" refers to the "fs" module from the standard library that we brought into scope earlier with the "use" statement. "read_to_string" is a function in the "fs" module. Here’s where it gets interesting – when we call the "read_to_string" function and provide "file_path" as an argument, the return value of this function is actually not a string. In fact, this is our first encounter with the concept of an "enumeration" in Rust.
+
+An "enumeration", or "enum" for short, is a type that can exist in one of several states, which are called "variants". In this case, the "read_to_string" function returns a "Result" enum (this is "Result" with a capital "R") that has two variants which are "Ok" (spelled "O-k") and "Err" (spelled "E-r-r"). If the "read_to_string" function executes successfully, then the "Result" enum will be the "Ok" variant. If the "read_to_string" function fails then the "Result" enum will be the "Err" variant. An "Ok" variant contains the value we care about and an "Err" variant contains information about the error.
+
+My understanding thus far is that generally speaking, if a function in Rust might produce an error, then the return value for that function will be a "Result" enum. This is a different approach than what I’m used to because in Python an exception is raised if there’s an error. For better or for worse, in Python, I often find myself thinking about errors *after* I encounter a given exception, as opposed to handling them ahead of time. Honestly, I think this is because when I’m writing Python code and it’s working, I’m often not even aware of a possible exception until I directly encounter it at some point. Once I encounter it, I can then add in some exception handling code.
+
+It took me a while to understand how Rust deals with errors. After I wrapped my head around the concept of a function returning a "Result" enum, I realized that essentially, Rust forces me (in a good way) to think about error handling right from the start. Deep down, this feels like the right way to do things, and it reinforces my belief that Rust will help me improve my software engineering skills.
+
+The question now is – what are we supposed to do with the "Result" enum? If the "read_to_string" function executes successfully, how do we get the value we’re interested in, which is the contents of the file as a String? What happens if there’s an error?
+
+This is where the "expect" method comes in. One possible way of working with an instance of a "Result" enum is to call its "expect" method. If the "Result" is the "Ok" variant, the "expect" method returns the value contained by the "Ok" variant – in this case, that’s the contents of the file as a "String". If the "Result" is the "Err" variant, the program crashes and prints the text of the error message that was passed to the "expect" method.
+
+That’s a lot happening in just a single statement. The good thing is we now know that we’ll encounter "Result" enums in scenarios where errors may be produced, and the "expect" method is one way to get the value we care about out of the "Result" enum.
+
+Let’s move on to the third statement. This reads "let first_line = ", followed by "contents.lines().next()", and then on the next line, indented by an additional four SPACE characters, we see ".expect" followed by parentheses that contain the string literal "File is empty", and finally our trailing semicolon.
+
+"contents" is the variable we defined in the previous statement, and this is a "String" that contains the raw contents of the Markdown file. We’re only interested in the first line of the Markdown file since that’s the line that contains the title text. One way to get the first line is to call the "lines" method for a String, which returns an iterator. This iterator can be used to iterate over each line in the "contents" String, where lines are separated by line endings, such as a newline character. Each line is a "string slice". If you remember from earlier in our discussion, the type "string slice" is denoted by "&str". We call the "next" method on the iterator to return the next element, which in our case is the first line of the "contents" String.
+
+This statement continues on to the second line, where we see the "expect" method called. This must mean that the "next" method on the iterator returns a "Result" enum, right? As it turns out, that’s not the case. The "next" method actually returns a different enum, called "Option". We’re still calling the "expect" method on an "enum". However, the "Option" enum has variants of "None" and "Some", whereas the "Result" enum has variants of "Ok" and "Err".
+
+So what is the "Option" enum used for? The "Option" enum is used in scenarios where the resulting value may be absent or invalid. In other programming languages, this is like a null value. Rust does not have null values. The advantage of this is described in detail in the book "The Rust Programming Language", which is freely available online.
+
+My understanding is that if it’s possible that the returned value of a function may be absent or invalid, then the function returns an "Option" enum. If the returned value exists, the "Option" enum will be the "Some" variant (and this will contain the value). If the returned value is absent or invalid, the "Option" enum will be the "None" variant.
+
+Why is this relevant for the "next" method that we’re using? Well, it’s quite possible that a Markdown file we open and read is completely empty. This means that there would be no lines to iterate over, so there is no "next" element in the iterator. The "next" method has to account for this as a possibility.
+
+Just like our earlier question with the "Result" enum, how do we get the value we’re interested in, which is the first line of the file contents, out of the "Option" enum? One way is to call the "expect" method on an instance of an "Option" enum. If the "Option" enum is the "Some" variant, the "expect" method returns the value contained by the "Some" variant – in this case, that’s the first line of the file as a string slice. If the "Option" is the "None" variant, the program crashes and prints the text of the error message that was passed to the "expect" method.
+
+That’s a lot of new concepts thus far. I suspect we’ll encounter a lot of "Result" and "Option" enums as we continue learning Rust, so it’s helpful to have a simple example of how these are used.
+
+Similar to the topic of error handling, it seems like Rust forces me (in a good way) to think about the concept of null values in a different, better way than what I’m used to. I anticipate that handling absent and invalid values via the "Option" enum will save me time that I’d normally spend  on debugging scenarios where I encounter a null value.
+
+In general, it feels like Rust is helping me address potential issues (such as errors and absent or invalid values) as early as possible so that I deal with these at compile time instead of at runtime.
+
+Ok, we’re now at our final two statements in the function body.
+
+At this point, we’ve obtained the first line of text from the Markdown file as a string slice, and this contains the raw title text. This is bound to the  variable "first_line". If you’re using the RustRover IDE, you’ll see that the variable "first_line" is annotated with the type "&str", which indicates this is a "string slice".
+
+We still have a little bit of cleanup to do in order to get the raw title text.
+
+In a Markdown file, the line with the title begins with a hash symbol followed by a SPACE, followed by the raw title text. We want to remove the first two characters so that we’re left with only the raw title text. We’ll do that by replacing the first two characters with a blank string – effectively removing them.
+
+Let’s dive in to the fourth statement to see how we do that. The fourth statement reads "let title = ", followed by "String" (with a capital "S"), which is immediately followed by two colons and then the function name "from". We use the "from" function to convert a string slice to a "String" (with a capital "S"). And we a pass a single argument to the "from" function, which is the variable "first_line". On the same line, we then have ".replace" to call the "replace" method. We pass two arguments to the "replace" method. The first argument is the pattern to look for in the String and the second argument is the replacement string. We want to remove the Markdown-related characters from the first line so that we’re left with the raw title text. So for us, the first argument to the "replace" method is a string literal that contains a hash symbol followed by a SPACE. The second argument is an empty string literal, so just two double quotes with nothing in between. This means we’re replacing those characters with an empty string literal – so in other words, we removed those characters.
+
+And finally, we’re at our fifth and final statement, which reads "println!" followed by parentheses that contain a format string in double quotes. The format string contains some descriptive text about what we’re printing, and most importantly it contains the word "title" in curly brackets. The "title" in curly brackets refers to the variable "title", which is the String we defined in the previous statement with the raw title text for the Markdown file. So to summarize, we’re calling the "println" macro, which we talked about in the previous episode, and passing it a format string so we can print the value of the variable "title".
+
+Quick side note – some of the syntax in the final two statements reminds me of Python, such as the way the "replace" method is used and the way curly brackets are used in a format string when printing the value of a variable. So that’s good news in that some of the syntax will be recognizable for folks coming from a Python background.
+
+Now, we can open a command-line shell and run the command "cargo run" and we’ll see the title of the Markdown document printed to standard output.
+
+That wraps up the first version of our practical code example for the topic of extracting text from a Markdown file. To recap, we covered how to use Rust to read the contents of a text file, iterate through lines of a text file, manipulate a "String" by replacing text, and print the value of a variable to standard output.
+
+I hope this was helpful. You can find more details about the podcast on the website provided in the episode notes. This website includes a link to the relevant practical code examples for each episode.
+
+Thanks for listening and stay tuned for the release of the next episode in which we’ll improve upon version 1 of our code for extracting text from a Markdown file.
