@@ -4,3 +4,5 @@
 
 target/
 
+stderr.txt
+stdout.txt
