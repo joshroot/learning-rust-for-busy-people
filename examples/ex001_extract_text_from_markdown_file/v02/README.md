@@ -58,7 +58,7 @@ Could not read the file: Os { code: 2, kind: NotFound, message: "No such file or
 
 ## Scenario 5
 
-The program will panics. The file must be non-empty. If the program is run with a command-line argument and the file path that is provided does exist but the file is empty, the `next` method on the iterator over the lines of the string returns an error. The message passed to the `expect` method is printed. Although the user sees a customized message that explains why the program crashed (`File is empty`), the crash itself is not prevented:
+The program panics. The file must be non-empty. If the program is run with a command-line argument and the file path that is provided does exist but the file is empty, the `next` method on the iterator over the lines of the string returns the `None` variant of the `Option` enum. The message passed to the `expect` method is printed. Although the user sees a customized message that explains why the program crashed (`File is empty`), the crash itself is not prevented:
 
 Command:
 ```
