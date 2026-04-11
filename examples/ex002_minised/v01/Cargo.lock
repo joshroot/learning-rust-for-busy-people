@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "ex002_replace_string_in_file_v01"
+name = "ex002_minised_v01"
 version = "0.1.0"
