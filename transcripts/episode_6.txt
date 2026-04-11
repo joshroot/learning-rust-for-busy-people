@@ -1,0 +1,117 @@
+Podcast: Learning Rust For Busy People
+Episode: #6 – minised, part 1
+Date: Friday April 10, 2026
+
+Hello everyone, and welcome to the "Learning Rust For Busy People" podcast! This podcast is for busy people who want to learn and quickly be productive with the Rust programming language.
+
+My name is Josh and today I’ll be discussing a new topic called "minised", which focuses on creating a miniature version of the "sed" command-line utility, spelled "s-e-d". For anyone who has not used "sed" before, it’s a utility that performs transformations on an input stream of text, such as replacing one word with another word.
+
+My choice of this topic was directly influenced by the "minigrep" project described in the book "The Rust Programming Language" in the chapter titled "An I/O Project: Building a Command Line Program". That project involved taking an existing command-line utility, "grep", and then using Rust to replicate some of its core functionality to create a simplified, "mini" version of "grep". For me, working through that project was an extremely useful exercise.
+
+I figured, if this can be done with "grep", why not try it with a different command-line utility? I spent some time thinking about other command-line utilities that I use when working with text and the "sed" utility is what came to mind first. Going through the process of developing a miniature version of the "sed" utility turned out to be more difficult than I thought, which was great from a learning standpoint. This challenged me to explore and use more features in Rust and it also presented me with lots of interesting software engineering considerations related to code organization, handling different text inputs for the program, and writing unit tests. This exercise was useful and genuinely interesting to me because I think it really challenged me to begin viewing problems through a Rust lens, which is quite different than the Python lens that I’ve spent so much time peering through.
+
+At this point, I’ve developed one version of the "minised" code with Rust. I made this as robust as possible based on the current knowledge I have about Rust. There’s about 250 lines of code (not including the unit tests) and numerous topics I’m excited to talk about, so I’ll be splitting the discussion across multiple episodes. This episode is part one.
+
+So, let’s get started!
+
+First, let’s talk about the scope of the problem. Since the purpose of going through this exercise is to learn Rust, we can choose a subset of functionality to implement so that we keep the problem sufficiently simple.
+
+In general, I consider myself to be a pretty basic user of "sed" because I typically only use it to modify a text input stream by replacing strings via the "s" command, where "s" stands for "substitute". Sometimes I’ll use regular expressions so I can replace strings that follow a given pattern, and other times I may just replace one specific string with a different string.
+
+The input text stream for "sed" might come from a file, or it could be text that was piped in via the pipe symbol "|". The result of the text transformation performed by "sed" is typically written to standard output. However, text files can also be modified in-place by passing the "-i" option when running "sed", which means nothing is printed to standard output.
+
+What I just described is a subset of "sed" functionality that I regularly use, which was actually helpful from a scoping standpoint because I decided to scope the problem to only that subset of functionality. There’s a lot more functionality offered by the "sed" utility, the details of which are provided in its manual, which I’ll link to in the episode notes.
+
+Let’s summarize the scope of functionality that will be included in our miniature version of the "sed" command-line utility, "minised". This will:
+-- Optionally accept the "-i" command-line argument to enable in-place modification of a file.
+-- It requires an "s" command script as a command-line argument with the following syntax: This begins with a lowercase letter "s", followed by a forward slash, then the original string pattern, then a forward slash, then the replacement string, then a forward slash, then a flag that modifies the behavior of the substitution operation, and all of this is wrapped in single quotes.
+-- It optionally accepts a file path that specifies the input stream of text. If a file path is not present then the input stream of text is read from standard input (which for example could be piped in with the pipe symbol "|".
+-- It replaces the original string pattern with the replacement string and either writes the result to standard output or overwrites the input file if the in-place modification behavior was enabled.
+
+In addition to limiting the scope of our program to a subset of "sed" functionality, there are also two simplifications I made, which are:
+-- Regular expressions are not currently handled. The original string pattern is just a fixed string. And...
+-- A single flag for the "s" command is required. In contrast to the real "sed" command-line utility that allows for zero or more flags to be specified in the "s" command syntax, "minised" requires a single flag to be present, which is either a lowercase letter "g" (to specify global replacement of the string) or an integer (to specify replacement of the n-th occurrence of the string in each line).
+
+Now, let’s dive into the actual code.
+
+In our project directory, we have two files in the "src" subdirectory,  which are "main.rs" and "lib.rs". As mentioned in previous episodes, "main.rs" is our binary crate and "lib.rs" is our library crate.
+
+Let’s start with the binary crate since it contains the "main" function, which is where program execution begins. In fact, the "main" function is the only function in the binary crate. The "main" function performs several tasks. First it creates a vector of command-line arguments. Next, it creates an instance of the "Config" struct which stores the command-line argument values in a structured format. Side note – I’ll explain what a "struct" is later. Then, it creates an instance of the "Substitution" struct that stores the elements of the "s" substitute command that was specified. And finally, it calls the "run" function that is defined in the library crate.
+
+There are several problems at runtime that we can anticipate ahead of time. These are treated as "recoverable" errors that are propagated up to the "main" function. By intention, the codebase was set up so that the "main" function is responsible for deciding how to handle errors. Based on my current understanding of Rust, this approach seems aligned with best practice for how to handle errors, so I decided to set things up in this way right from the start.
+
+At this point, we’ve already come across a new concept in Rust, which is  the concept of a "struct". A "struct" is a custom data type that is used to group related values together. A Rust "struct" reminds me a little bit of a Python "class". In Rust, you can define custom-named fields for a struct and instantiate a "struct", sort of like how in Python you can define custom-named attributes for a "class" and instantiate a "class". However, although there are some similarities, a Rust "struct" and a Python "class" are two different, distinct concepts. In fact, the concept of a "class" does not even exist in Rust (at least not based on what I’ve learned thus far).
+
+I’ll plan to talk more in depth about differences between a Rust "struct" and a Python "class" at a later time after I’ve gained a more thorough understanding. For one thing, I know I’ll need to read through a chapter in the Rust book that’s titled "Object-Oriented Programming Features" to deepen my understanding.
+
+I mentioned two different structs above, which are the "Config" struct and the "Substitution" struct.
+
+We’ll begin with the "Config" struct. This was directly influenced by the "minigrep" project in the book, which uses a "Config" struct to group configuration-related values together, such as the values passed as command-line arguments. The "minised" program can also take multiple command-line arguments, so it seemed appropriate to reuse this concept. So how do we define a "struct"? Let’s dive into the library crate to take a look since that’s where the "Config" struct is defined.
+
+The code that defines the "Config" struct reads "pub", "struct", "Config" (with a capital "C"), followed by an open curly bracket. On the following three lines, indented by one level (which means four SPACE characters), we define the fields and their types:
+-- The first line reads "in_place", colon, "bool".
+-- The second line reads "pub", "script", colon, "String" (with a capital "S").
+-- The third line reads "file_path", colon, "Option" (with a capital "O"), which is then immediately followed by "String" (with a capital "S") inside a set of angle brackets.
+Each of these lines has a trailing comma. Then on the final line, on a line of its own, is a closing curly bracket.
+
+We’ve talked about the "pub" keyword before, and this shows up twice here. The first time it shows up is because we need to declare the entire "Config" struct as public so it’s accessible from within the binary crate. In addition, the binary crate will also need to be able to access the "script" field for a given instance of a "Config" struct, so the "script" field must also be declared as public.
+
+The three fields in the "Config" struct correspond to the three possible command-line arguments that may be passed when running the "minised" program. Let’s go through one by one.
+
+The "in_place" field dictates whether a file is modified in-place. This field has a type of "bool", which means Boolean, and is set to "true" if the "-i" option on the command line is present, otherwise it’s set to "false" if the "-i" option is absent.
+
+The "script" field corresponds to the script for the "s" command, which consists of four elements separated by forward slashes, which are a lowercase letter "s", the original string pattern, the replacement string, and then the flag. The "script" value (with the appropriate syntax) must always be passed as a command-line argument. If this is missing then this causes an error.
+
+The "file_path" field has a type of "Option<String>", where "String" is contained inside angle brackets immediately after "Option". This, for me, is where things get really interesting. When running the "minised" program, a file path can optionally be passed as a command-line argument, which means the file path will either be something or it will be nothing. While thinking through how to handle this scenario, it eventually dawned on me that this was a perfect use case for the "Option" enum. As a quick reminder – the "Option" enum has two variants, which are "Some" and "None", and this enum is used in scenarios where a value may be either something or nothing.
+
+After having worked through this part of the problem, I have a much stronger appreciation of the power of the "Option" enum in Rust. Basically, Rust forces me to identify scenarios where a value may potentially be nothing, to encode this in the form of a variable that has the "Option" type, and then to handle this variable by explicitly indicating what the program should do if the variable is the "Some" variant and what the program should do if the variable is the the "None" variant.
+
+In the present scenario, using the "Option" type for the "file_path" field in the "Config" struct enables us to dictate the source of the input stream of text. If "file_path" is the "Some" variant, that means that a file path was passed as a command-line argument and we want to read the input text stream from that file path. If "file_path" is the "None" variant, that means a file path was not passed as a command-line argument and we instead want to read the input text stream from standard input.
+
+I can very clearly see why the Rust approach to handling the concept of "null" values will help me avoid a ton of headaches down the road. The Rust approach forces me to identify which values might end up being "nothing", and to do this right at the start. In my past experience, for better or for worse, I’m accustomed to having errors related to null or None values crop up at runtime, and then I need to deal with them. I’ve generally found that to be frustrating since it’s sort of like a surprise. In contrast, using the "Option" enum in Rust empowers me to think through these "null"-related considerations at compile time, which means I can avoid that category of runtime errors altogether.
+
+Ok, so we covered how the "Config" struct was defined. Now let’s talk about how we can create a function associated with the "Config" struct that can be used to create a new instance of "Config".
+
+In the library crate, after the "Config" struct is defined, we have a new block, called an "impl" block, spelled "i-m-p-l", where "impl" stands for "implementation". An "impl" block is used to implement functionality that is associated with a specific "struct". We could also say that this functionality is associated with a specific "type", since when we define a "struct", we’re also defining a new "type".
+
+The line that begins the "impl" block reads "impl", "Config", and then an opening curly bracket. On the next line, indented one level, we define a single function called "build", which serves as a constructor that will create a new instance of the "Config" struct. This function definition line reads "pub", "fn", "build", followed by a set of parentheses with the function parameters, an arrow, and then the return type, followed by an opening curly bracket.
+
+The "build" function takes a single parameter, "args", which is the vector of command-line arguments as Strings. The return type is a "Result" enum that will either be the "Ok" variant (that contains an instance of a "Config" struct) or the "Err" variant (which will contain a static string error message). The return type reads "Result" (with a capital "R"), which is immediately followed by a set of angle brackets that contain two items separated by a comma.
+
+The first item, which corresponds to the "Ok" variant, is "Config" (with a capital "C"). The second item, which corresponds to the "Err" variant, consists of an ampersand, immediately followed by an apostrophe, immediately followed by the word "static", then a SPACE and then "s-t-r", all lowercase. Based on the Rust book, this syntax for the "Err" variant indicates that, and I quote, "our error values will always be string literals that have the ‘static lifetime", end quote. "Lifetimes" are a concept in Rust that we haven’t talked about yet. This is another topic that I’ll wait to discuss after I have a more thorough understanding.
+
+We used the "pub" keyword to declare the"build" function as "public" so it’s accessible from within the binary crate.
+
+Instead of diving into the details of what happens inside the "build" function for the "Config" struct, let’s first stay at a high level and talk about how the "build" function is called from within the binary crate. At the top of the binary crate file, we’ve included a new "use" statement that reads "use", then the name of the package, "minised" (which is listed in the "Cargo.toml" file), which is immediately followed by two colons and then a set of curly brackets that contain two items separated by a comma, which are the struct names "Config" (with a capital "C") and "Substitution" (with a capital "S"), and then a trailing semicolon. In this single line, we’re bringing both the "Config" and "Substitution" structs into scope.
+
+Now, if we jump back into the "main" function in the binary crate, we can focus on the line that defines the variable "config" (with a lowercase "c") to be a new instance of the "Config" struct (with an uppercase "C"), which means its type is "Config", (with an uppercase "C"). This consists of four consecutive lines. The first line reads "let", "config" (with a lowercase "c"), equals, "Config" (with an uppercase "C"), and then two colons, the word "build", followed by a set of parentheses that contain an ampersand immediately followed by "args", followed by a dot and then the method name "unwrap_or_else", followed by an opening parenthesis and then the word "err" (all lowercase) between two vertical pipe "|" characters, followed by an opening curly bracket.
+
+There’s a lot going on in this first line, so let’s break it down. We first call the "build" constructor function that is associated with the "Config" struct. The "build" function is technically not a "method" for the "Config" struct, so the notation we use to call it is a little different. That’s why we call the "build" function via two colons instead of a dot. The "build" function creates a new instance of the "Config" struct and returns a "Result" enum.
+
+The "unwrap_or_else" method for a "Result" enum behaves as follows. If the "Result" enum is the "Ok" variant, the contained value will be returned. If the "Result" enum is the "Err" variant, an anonymous function passed as an argument to the "unwrap_or_else" method will be called. This anonymous function is called a "closure".
+
+So at a high level, the "unwrap_or_else" method allows us to say – if this operation is successful, then return the contained value. Otherwise, perform the following operations instead (which are contained inside the closure).
+
+There are two statements inside the body of the "closure". In the first statement, the "eprintln!" macro is used to print an error message to standard error. The value contained in the "Err" variant is included in the printed error message. The second statement calls the "exit" function from the "process" module to immediately stop program execution and to return an exit status code of "1".
+
+On the fourth and final line, there is a closing curly bracket (to mark the end of the "closure"), then a closing parenthesis (to mark the end of the "unwrap_or_else" method), and then a trailing semicolon since this is technically a statement.
+
+In our "minised" program, if a new instance of the "Config" struct is successfully created, this will be contained in the "Ok" variant of the "Result" enum. The "unwrap_or_else" method will return the contained value, which will be assigned to the variable named "config" (with a lowercase "c"). If there’s an error when creating a new instance of the "Config" struct then the "Result" enum will be the "Err" variant. The "unwrap_or_else" method will then call the closure that was passed to it, which causes the program to print a message to standard error and then immediately exit.
+
+We just talked through a bunch of new information based on just a small part of the "minised" program, so I think this is a good stopping point for the first part of this discussion.
+
+Here’s a quick recap of what we covered. We discussed:
+-- A subset of functionality for the "sed" command-line utility that’s used for replacing text.
+-- The scope of features that we’ll include in the miniature "sed" utility that we’re building.
+-- How to define a "struct" in Rust.
+-- How to leverage the "Option" enum for a value that may be either something or nothing.
+-- How to instantiate a "struct" in Rust via an associated function in an implementation block.
+-- How to bring a "struct" into scope in the binary crate.
+-- And finally, how to use the "unwrap_or_else" method on a "Result" enum and to define a "closure".
+
+I hope this was helpful. You can find more details about the podcast on the website provided in the episode notes. This website includes a link to the relevant practical code examples for each episode.
+
+Thanks for listening and stay tuned for the release of the next episode in which we’ll continue the discussion about developing a miniature version of the "sed" command-line utility.
+
+Manual for the "sed" utility:
+https://www.gnu.org/software/sed/manual/sed.html
