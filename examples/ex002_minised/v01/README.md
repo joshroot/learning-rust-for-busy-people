@@ -20,6 +20,15 @@ cargo build
 
 ## Scenario 1
 
+The program runs successfully and prints the transformed text to standard output. The input text stream is read from standard input (piped in from `echo` command output). In each line, replace the 2nd instance of "Monday" with "Tuesday". STDOUT and STDERR are both printed to the command-line shell:
+
+Command:
+```
+echo "column_1,column_2,column_3\nMonday,Monday,Monday\nMonday,Monday,Monday" | ./target/debug/ex002_minised_v01 's/Monday/Tuesday/2'
+```
+
+## Scenario 2
+
 The program runs successfully and prints the transformed text to standard output. Global replacement of "Monday" with "Tuesday". STDOUT and STDERR are both printed to the command-line shell:
 
 Command:
@@ -27,7 +36,7 @@ Command:
 ./target/debug/ex002_minised_v01 's/Monday/Tuesday/g' ../data/mondays.csv
 ```
 
-## Scenario 2
+## Scenario 3
 
 The program runs successfully and prints the transformed text to standard output. In each line, replace the 2nd instance of "Monday" with "Tuesday". STDOUT and STDERR are both printed to the command-line shell:
 
@@ -36,7 +45,7 @@ Command:
 ./target/debug/ex002_minised_v01 's/Monday/Tuesday/2' ../data/mondays.csv
 ```
 
-## Scenario 3
+## Scenario 4
 
 The program runs successfully. Inclusion of the `-i` option switches behavior to modify the file in-place, so nothing is printed to standard output. STDERR is printed to the command-line shell.
 
@@ -45,7 +54,7 @@ Command:
 ./target/debug/ex002_minised_v01 -i 's/Monday/Tuesday/g' ../data/mondays.csv
 ```
 
-## Scenario 4
+## Scenario 5
 
 The program terminates early and prints an error message.
 
@@ -59,7 +68,7 @@ Snippet of output:
 Argument parsing error: Not enough command-line arguments
 ```
 
-## Scenario 5
+## Scenario 6
 
 The program terminates early and prints an error message.
 
@@ -73,7 +82,7 @@ Snippet of output:
 Argument parsing error: The first command-line argument is not valid, expected `-i`
 ```
 
-## Scenario 6
+## Scenario 7
 
 The program terminates early and prints an error message.
 
@@ -87,7 +96,7 @@ Snippet of output:
 Argument parsing error: The first command-line argument is not valid, expected `-i`
 ```
 
-## Scenario 7
+## Scenario 8
 
 The program terminates early and prints an error message.
 
@@ -101,7 +110,7 @@ Snippet of output:
 Argument parsing error: Too many command-line arguments
 ```
 
-## Scenario 8
+## Scenario 9
 
 The program terminates early and prints an error message.
 
@@ -119,7 +128,7 @@ Snippet of output:
 minised script parsing error: Flag must be 'g' or an integer greater than 0
 ```
 
-## Scenario 9
+## Scenario 10
 
 The program terminates early and prints an error message.
 
@@ -133,7 +142,7 @@ Snippet of output:
 minised script parsing error: Invalid script format, expected 's/pattern/replacement/flag'
 ```
 
-## Scenario 10
+## Scenario 11
 
 The program terminates early and prints an error message.
 
